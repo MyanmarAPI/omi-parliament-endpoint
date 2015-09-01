@@ -25,8 +25,8 @@ csv.fromPath('./source/questions.tsv', { delimiter: '\t' })
         fs.writeFile('./questions/' + current_MP[n] + '.json', JSON.stringify({
           id: current_MP_id,
           name: {
-            english: current_MP[1],
-            myanmar: current_MP[2]
+            english: current_MP[0],
+            myanmar: current_MP[1]
           },
           questions: current_MP_questions
         }), function (err) {
