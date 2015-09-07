@@ -1,6 +1,6 @@
 ## omi-parliament-endpoint
 
-Static JSON API based on data released by
+Static JSON API based on data released by the Open Myanmar Initiative
 
 Part of the MaePaySoh API for Myanmar Elections 2015
 
@@ -8,13 +8,80 @@ Part of the MaePaySoh API for Myanmar Elections 2015
 
 There are three datasets covering March 2011 to November 2014
 
+- biographical info for members of parliament (name, party, birthdate, gender, ethnicity, occupation)
 - questions by members of parliament
 - motions by members of parliament
-- biographical data for members of parliament (name, party, birthdate, gender, ethnicity, occupation)
 
 ## API documentation
 
 All endpoint URLs begin with ```http://myanmarapi.github.io/omi-parliament-endpoint```
+
+### Members API
+
+***/members/all.json***
+
+Returns a JSON array of all members of parliament.
+
+```javascript
+[
+  {
+    "id": "MP-ID",
+    "name": {
+      "english": "English Name",
+      "myanmar": "မြန်မာ"
+    },
+    "house": {
+      "english": "English Name",
+      "myanmar": "မြန်မာ"
+    },
+    "constituency": {
+      "english": "English Name",
+      "myanmar": "မြန်မာ"
+    },
+    "party": "",
+    "gender": "M or F"
+  },
+  ...
+]
+```
+
+***/members/NAME.json***
+
+Returns a JSON object with more detailed information about an individual member of parliament.
+
+NAME can be in Myanmar language or in English.
+
+```javascript
+{
+  "id": "MP-ID",
+  "name": {
+    "english": "English Name",
+    "myanmar": "မြန်မာ"
+  },
+  "house": {
+    "english": "English Name",
+    "myanmar": "မြန်မာ"
+  },
+  "constituency": {
+    "english": "English Name",
+    "myanmar": "မြန်မာ"
+  },
+  "gender": "M or F",
+  "birthdate": "",
+  "occupation": "",
+  "party": "",
+  "ethnicity": ""
+}
+```
+
+***/members/regions/REGION.json***
+
+Returns a JSON array of parliament members from this REGION. The REGION can be
+in Myanmar language or in English.
+
+***/members/constituencies/CONSTITUENCY.json***
+
+Returns a JSON array of parliament members from this CONSTITUENCY. The CONSTITUENCY can be in Myanmar language or in English.
 
 ### Questions API
 
@@ -30,7 +97,7 @@ NAME can be in Myanmar language or in English.
  "id": "MP-ID",
  "name": {
    "english": "English Name",
-   "myanmar": "မြန်မာဘာသာ"
+   "myanmar": "မြန်မာ"
  }
  "questions": [
    {
@@ -54,6 +121,20 @@ NAME can be in Myanmar language or in English.
 }
 ```
 
+If there are no recorded questions from this MP, you will get an empty array:
+
+```javascript
+{
+ "id": "MP-ID",
+ "name": {
+   "english": "English Name",
+   "myanmar": "မြန်မာ"
+ }
+ "questions": [
+ ]
+}
+```
+
 ***/questions/QUESTION_ID.json***
 
 Returns a JSON object with information about an individual question by a parliament member.
@@ -64,7 +145,7 @@ Returns a JSON object with information about an individual question by a parliam
    "source": {
      "id": "MP-ID",
      "english": "English Name",
-     "myanmar": "မြန်မာဘာသာ"
+     "myanmar": "မြန်မာ"
    },
    "house": "First Amyotha Hluttaw",
    "session": "First Regular Session",
@@ -95,14 +176,14 @@ NAME can be in Myanmar language or in English.
   "id": "MP-ID",
   "name": {
     "english": "English Name",
-    "myanmar": "မြန်မာဘာသာ"
+    "myanmar": "မြန်မာ"
   }
   "motions": [
     {
       "id": "CBM-01-01-004",
       "source": {
         "english": "English Name",
-        "myanmar":"မြန်မာဘာသာ"
+        "myanmar":"မြန်မာ"
       },
       "submitted_date": "24-Mar-11",
       "house": "First Pyidaungsu Hluttaw",
@@ -135,7 +216,7 @@ Returns a JSON object with information about an individual motion by a parliamen
   "source": {
     "id": "MP-ID",
     "english": "English Name",
-    "myanmar":"မြန်မာဘာသာ"
+    "myanmar":"မြန်မာ"
   },
   "submitted_date": "24-Mar-11",
   "house": "First Pyidaungsu Hluttaw",
@@ -155,27 +236,19 @@ Returns a JSON object with information about an individual motion by a parliamen
 }
 ```
 
-### Biographical API
+If there are no recorded motions from this MP, you will get an empty array:
 
-***/members/all.json***
-
-Returns a JSON array of all members of parliament.
-
-***/members/NAME.json***
-
-Returns a JSON object with information about an individual member of parliament.
-
-NAME can be in Myanmar language or in English.
-
-***/members/regions/REGION.json***
-
-Returns a JSON array of parliament members from this REGION. The REGION can be
-in Myanmar language or in English.
-
-***/members/constituencies/CONSTITUENCY.json***
-
-Returns a JSON array of parliament members from this CONSTITUENCY. Constituency
-must be in English (but we would like help fixing this!)
+```javascript
+{
+ "id": "MP-ID",
+ "name": {
+   "english": "English Name",
+   "myanmar": "မြန်မာ"
+ }
+ "motions": [
+ ]
+}
+```
 
 ## Data updates
 
@@ -191,3 +264,5 @@ git commit -m "data update 2015-09-01"
 ## License
 
 Data collected by Open Myanmar Initiative
+
+JavaScript code is open sourced under an MIT license
