@@ -108,10 +108,6 @@ function writeQuestionsAndMotions() {
           if (current_MP) {
             writeCurrentMP();
           }
-          // update current_MP
-          current_MP = [question[1], question[2]];
-          current_MP_id = mpid;
-          current_MP_questions = [];
 
           // add this MP to the known_mps
           var mpjson = {
@@ -135,6 +131,13 @@ function writeQuestionsAndMotions() {
           };
           known_mps[mpid] = mpjson;
         }
+
+        // update current_MP
+        current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
+        if (mpid != current_MP_id) {
+          current_MP_questions = [];
+        }
+        current_MP_id = mpid;
         known_mps[mpid].questions = true;
 
         var question_id = question[14];
@@ -142,8 +145,8 @@ function writeQuestionsAndMotions() {
           id: question_id,
           source: {
             id: mpid,
-            english: question[1],
-            myanmar: question[2]
+            english: known_mps[mpid].name.english,
+            myanmar: known_mps[mpid].name.myanmar
           },
           house: question[11],
           session: question[16],
@@ -232,10 +235,6 @@ function writeQuestionsAndMotions() {
           if (current_MP) {
             writeCurrentMP();
           }
-          // update current_MP
-          current_MP_id = mpid;
-          current_MP = [motion[1], motion[2]];
-          current_MP_motions = [];
 
           // add this MP to the known_mps
           var mpjson = {
@@ -259,6 +258,13 @@ function writeQuestionsAndMotions() {
           };
           known_mps[mpid] = mpjson;
         }
+
+        // update current_MP
+        current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
+        if (mpid != current_MP_id) {
+          current_MP_motions = [];
+        }
+        current_MP_id = mpid;
         known_mps[mpid].motions = true;
 
         var motion_id = motion[14];
@@ -266,8 +272,8 @@ function writeQuestionsAndMotions() {
           id: motion_id,
           source: {
             id: mpid,
-            english: motion[1],
-            myanmar: motion[2]
+            english: known_mps[mpid].name.english,
+            myanmar: known_mps[mpid].name.myanmar
           },
           submitted_date: motion[15],
           house: motion[16],

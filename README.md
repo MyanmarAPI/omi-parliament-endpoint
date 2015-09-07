@@ -255,7 +255,7 @@ If there are no recorded motions from this MP, you will get an empty array:
 Update the files in /source/, then run:
 
 ```bash
-rm -rf questions/* motions/*
+rm -rf questions/* motions/* questions/*
 node rebuild.js
 git add .
 git commit -m "data update 2015-09-01"
