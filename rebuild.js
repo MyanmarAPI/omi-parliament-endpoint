@@ -8,63 +8,109 @@ var regions = [];
 var constituencies = [];
 
 var mprows = [];
-csv.fromPath('./source/members.tsv', { delimiter: '\t'})
+csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
   .on('data', function (row) {
     mprows.push(row);
   })
   .on('end', function () {
-    var column_names = mprows.splice(0, 1);
-    for (var r = 0; r < mprows.length; r++) {
-      var mp = mprows[r];
-      var mpid = mp[0];
+    csv.fromPath('./source/lower-house-members.tsv', { delimiter: '\t'})
+      .on('data', function (row) {
+        mprows.push(row);
+      })
+      .on('end', function () {
+        var column_names = mprows.splice(0, 1);
+        for (var r = 0; r < mprows.length; r++) {
+          var mp = mprows[r];
+          var mpid = mp[0];
 
-      var mpdata = {
-        id: mp[0],
-        name: {
-          english: mp[1],
-          myanmar: mp[2]
-        },
-        constituency: {
-          name: mp[3],
-          number: mp[4]
-        },
-        region: {
-          english: mp[5],
-          myanmar: mp[6]
-        },
-        party: mp[7],
-        gender: mp[8],
-        ethnicity: mp[9],
-        religion: mp[10],
-        birthdate: mp[11],
-        occupation: mp[12],
-        house: mp[13],
-        term: {
-          elected: mp[14],
-          term_end: mp[15]
-        }
-      };
-      known_mps[mpid] = mpdata;
-      var mpcontent = JSON.stringify(mpdata);
+          var mpdata;
+          var con_number = mp[4];
+          if (!con_number || !isNaN(con_number * 1)) {
+            // upper house
+            mpdata = {
+              id: mp[0],
+              name: {
+                english: mp[1],
+                myanmar: mp[2]
+              },
+              constituency: {
+                name: {
+                  english: mp[3],
+                  myanmar: mp[6]
+                },
+                number: mp[4]
+              },
+              region: {
+                english: mp[5],
+                myanmar: mp[6]
+              },
+              party: mp[7],
+              gender: mp[8],
+              ethnicity: mp[9],
+              religion: mp[10],
+              birthdate: mp[11],
+              occupation: mp[12],
+              house: mp[13],
+              term: {
+                elected: mp[14],
+                term_end: mp[15]
+              }
+            };
+          } else {
+            // lower house
+            mpdata = {
+              id: mp[0],
+              name: {
+                english: mp[1],
+                myanmar: mp[2]
+              },
+              constituency: {
+                name: {
+                  english: mp[3],
+                  myanmar: mp[4]
+                },
+                number: 0
+              },
+              region: {
+                english: mp[5],
+                myanmar: mp[6]
+              },
+              party: mp[7],
+              gender: mp[8],
+              ethnicity: mp[9],
+              religion: mp[10],
+              birthdate: mp[11],
+              occupation: mp[12],
+              house: mp[13],
+              term: {
+                elected: mp[14],
+                term_end: mp[15]
+              }
+            };
+          }
 
-      fs.writeFile('./members/' + mpdata.name.myanmar + '.json', mpcontent, function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-      fs.writeFile('./members/' + mpdata.name.english + '.json', mpcontent, function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-      fs.writeFile('./members/' + mpid + '.json', mpcontent, function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-    }
+          known_mps[mpid] = mpdata;
+          var mpcontent = JSON.stringify(mpdata);
 
-    writeQuestionsAndMotions();
+          fs.writeFile('./members/' + mpdata.name.myanmar + '.json', mpcontent, function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+          fs.writeFile('./members/' + mpdata.name.english + '.json', mpcontent, function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+          fs.writeFile('./members/' + mpid + '.json', mpcontent, function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+        }
+
+        writeQuestionsAndMotions();
+      });
   });
 
 function writeQuestionsAndMotions() {
@@ -104,11 +150,6 @@ function writeQuestionsAndMotions() {
         var question = qrows[r];
         var mpid = question[0];
         if (!known_mps[mpid]) {
-          // save a record for the previous MP
-          if (current_MP) {
-            writeCurrentMP();
-          }
-
           // add this MP to the known_mps
           var mpjson = {
             id: mpid,
@@ -135,6 +176,7 @@ function writeQuestionsAndMotions() {
         // update current_MP
         current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
         if (mpid != current_MP_id) {
+          writeCurrentMP();
           current_MP_questions = [];
         }
         current_MP_id = mpid;
@@ -231,11 +273,6 @@ function writeQuestionsAndMotions() {
         var motion = mrows[r];
         var mpid = motion[0];
         if (!known_mps[mpid]) {
-          // save a record for the previous MP
-          if (current_MP) {
-            writeCurrentMP();
-          }
-
           // add this MP to the known_mps
           var mpjson = {
             id: mpid,
@@ -262,6 +299,7 @@ function writeQuestionsAndMotions() {
         // update current_MP
         current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
         if (mpid != current_MP_id) {
+          writeCurrentMP();
           current_MP_motions = [];
         }
         current_MP_id = mpid;

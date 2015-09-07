@@ -63,8 +63,11 @@ NAME can be in Myanmar language or in English.
     "myanmar": "မြန်မာ"
   },
   "constituency": {
-    "english": "English Name",
-    "myanmar": "မြန်မာ"
+    "name": {
+      "english": "English Name",
+      "myanmar": "မြန်မာ"
+    },
+    "number": 1  // 0 for lower house
   },
   "gender": "M or F",
   "birthdate": "",
