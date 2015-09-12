@@ -14,7 +14,7 @@ There are three datasets covering March 2011 to November 2014
 
 ## API documentation
 
-All endpoint URLs begin with ```http://myanmarapi.github.io/omi-parliament-endpoint```
+All endpoint URLs begin with ```http://api.maepaysoh.org/parliament/```
 
 ### Members API
 
