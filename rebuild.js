@@ -4,10 +4,13 @@ var fs = require('fs');
 var csv = require('fast-csv');
 
 var known_mps = {};
-var regions = [];
-var constituencies = [];
 
 var mprows = [];
+var allmps = [];
+
+var regions = {};
+var constituencies = {};
+
 csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
   .on('data', function (row) {
     mprows.push(row);
@@ -33,7 +36,7 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
                 english: mp[1],
                 myanmar: mp[2]
               },
-              constituency: {
+              uency: {
                 name: {
                   english: mp[3],
                   myanmar: mp[6]
@@ -87,9 +90,20 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
                 term_end: mp[15]
               }
             };
+          };
+
+          // organize candidates by constituency and region
+          if (!constituencies[mp[3]]) {
+            constituencies[mp[3]] = [mp[3], mp[4]];
           }
+          constituencies[mp[3]].push(mpdata);
+          if (!regions[mp[5]]) {
+            regions[mp[5]] = [mp[5], mp[6]];
+          }
+          regions[mp[5]].push(mpdata);
 
           known_mps[mpid] = mpdata;
+          allmps.push(mpdata);
           var mpcontent = JSON.stringify(mpdata);
 
           fs.writeFile('./members/' + mpdata.name.myanmar + '.json', mpcontent, function (err) {
@@ -103,6 +117,37 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
             }
           });
           fs.writeFile('./members/' + mpid + '.json', mpcontent, function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+        }
+
+        fs.writeFile('./members/all.json', JSON.stringify(allmps), function (err) {
+          if (err) {
+            throw err;
+          }
+        });
+
+        for (var constituency in constituencies) {
+          fs.writeFile('./members/constituencies/' + constituencies[constituency][0] + '.json', JSON.stringify(constituencies[constituency].slice(2)), function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+          fs.writeFile('./members/constituencies/' + constituencies[constituency][1] + '.json', JSON.stringify(constituencies[constituency].slice(2)), function (err) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        }
+        for (var region in regions) {
+          fs.writeFile('./members/regions/' + regions[region][0] + '.json', JSON.stringify(regions[region].slice(2)), function (err) {
+            if (err) {
+              throw err;
+            }
+          });
+          fs.writeFile('./members/regions/' + regions[region][1] + '.json', JSON.stringify(regions[region].slice(2)), function (err) {
             if (err) {
               throw err;
             }
