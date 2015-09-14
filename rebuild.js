@@ -36,7 +36,7 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
                 english: mp[1],
                 myanmar: mp[2]
               },
-              uency: {
+              constituency: {
                 name: {
                   english: mp[3],
                   myanmar: mp[6]
