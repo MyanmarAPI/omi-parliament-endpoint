@@ -1,6 +1,6 @@
 {
   "name": "omi-parliament-endpoint",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Generate a JSON API from OMI's CSV files",
   "main": "rebuild.js",
   "author": "The Asia Foundation",

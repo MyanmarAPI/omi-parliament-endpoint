@@ -189,6 +189,18 @@ function writeQuestionsAndMotions() {
             }
           });
         }
+        fs.writeFile('./questions/' + current_MP_id + '.json', JSON.stringify({
+          id: current_MP_id,
+          name: {
+            english: current_MP[0],
+            myanmar: current_MP[1]
+          },
+          questions: current_MP_questions
+        }), function (err) {
+          if (err) {
+            throw err;
+          }
+        });
       };
 
       for (var r = 0; r < qrows.length; r++) {
@@ -219,12 +231,12 @@ function writeQuestionsAndMotions() {
         }
 
         // update current_MP
-        current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
         if (mpid != current_MP_id) {
           writeCurrentMP();
+          current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
           current_MP_questions = [];
+          current_MP_id = mpid;
         }
-        current_MP_id = mpid;
         known_mps[mpid].questions = true;
 
         var question_id = question[14];
@@ -312,6 +324,18 @@ function writeQuestionsAndMotions() {
             }
           });
         }
+        fs.writeFile('./motions/' + current_MP_id + '.json', JSON.stringify({
+          id: current_MP_id,
+          name: {
+            english: current_MP[0],
+            myanmar: current_MP[1]
+          },
+          motions: current_MP_motions
+        }), function (err) {
+          if (err) {
+            throw err;
+          }
+        });
       };
 
       for (var r = 0; r < mrows.length; r++) {
@@ -342,12 +366,12 @@ function writeQuestionsAndMotions() {
         }
 
         // update current_MP
-        current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
         if (mpid != current_MP_id) {
           writeCurrentMP();
-          current_MP_motions = [];
+          current_MP = [known_mps[mpid].name.english, known_mps[mpid].name.myanmar];
+          current_MP_questions = [];
+          current_MP_id = mpid;
         }
-        current_MP_id = mpid;
         known_mps[mpid].motions = true;
 
         var motion_id = motion[14];
