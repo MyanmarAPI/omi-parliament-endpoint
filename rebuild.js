@@ -11,6 +11,28 @@ var allmps = [];
 var regions = {};
 var constituencies = {};
 
+var religionMatches = require('./source/religion-matches.json');
+var ethnicityMatches = require('./source/ethnicity-matches.json');
+
+function translate (english, fromList) {
+  for (var i = 0; i < fromList.length; i++) {
+    if (english === fromList[i][0]) {
+      return fromList[i][1];
+    }
+  }
+  if (english && english != "N-A" && english != "N/A") {
+    console.log("not found: " + english);
+  }
+  return "";
+}
+
+function myEthnicity (english) {
+  return translate(english.replace("/", "-"), ethnicityMatches);
+}
+function myReligion (english) {
+  return translate(english, religionMatches);
+}
+
 csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
   .on('data', function (row) {
     mprows.push(row);
@@ -50,7 +72,9 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
               party: mp[7],
               gender: mp[8],
               ethnicity: mp[9],
+              ethnicity_my: myEthnicity(mp[9]),
               religion: mp[10],
+              religion_my: myReligion(mp[10]),
               birthdate: mp[11],
               occupation: mp[12],
               house: mp[13],
@@ -81,7 +105,9 @@ csv.fromPath('./source/upper-house-members.tsv', { delimiter: '\t'})
               party: mp[7],
               gender: mp[8],
               ethnicity: mp[9],
+              ethnicity_my: myEthnicity(mp[9]),
               religion: mp[10],
+              religion_my: myReligion(mp[10]),
               birthdate: mp[11],
               occupation: mp[12],
               house: mp[13],
@@ -219,7 +245,9 @@ function writeQuestionsAndMotions() {
             party: question[5],
             gender: question[6],
             ethnicity: question[7],
+            ethnicity_my: myEthnicity(question[7]),
             religion: question[8],
+            religion_my: myReligion(question[8]),
             dob: question[9],
             occupation: question[10],
             term: {
@@ -354,7 +382,9 @@ function writeQuestionsAndMotions() {
             party: motion[5],
             gender: motion[6],
             ethnicity: motion[7],
+            ethnicity_my: myEthnicity(motion[7]),
             religion: motion[8],
+            religion_my: myReligion(motion[8]),
             dob: motion[9],
             occupation: motion[10],
             term: {
